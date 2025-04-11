@@ -1,0 +1,18 @@
+services:
+  # Serviço para o banco de dados PostgreSQL
+  db:
+    image: postgres:16 # Usa a imagem oficial do PostgreSQL versão 16
+    container_name: lotes_db # Nome do contêiner para fácil identificação
+    restart: always # Reinicia o contêiner automaticamente se ele parar
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER} # Usuário do banco (será lido do .env.local)
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} # Senha do banco (será lido do .env.local)
+      POSTGRES_DB: ${POSTGRES_DB} # Nome do banco de dados (será lido do .env.local)
+    ports:
+      - '${POSTGRES_PORT}:5432' # Mapeia a porta do seu PC para a porta padrão do Postgres dentro do contêiner
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # Persiste os dados do banco mesmo se o contêiner parar/remover
+
+volumes:
+  postgres_data: # Define o volume nomeado para persistência
+    driver: local
