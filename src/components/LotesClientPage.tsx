@@ -270,6 +270,7 @@ export default function LotesClientPage() {
                                     <TableHead>Número Lote</TableHead>
                                     <TableHead>Referência</TableHead>
                                     <TableHead className="hidden sm:table-cell">Produto</TableHead>
+                                    <TableHead className="hidden sm:table-cell">Empresa</TableHead>
                                     <TableHead className="hidden md:table-cell">Data Criação</TableHead>
                                     <TableHead>Status Email</TableHead>
                                     <TableHead className="text-right">Ações</TableHead>
@@ -281,6 +282,7 @@ export default function LotesClientPage() {
                                         <TableCell className="font-medium">{lote.numero_lote}</TableCell>
                                         <TableCell>{lote.referencia || '-'}</TableCell>
                                         <TableCell className="hidden sm:table-cell">{lote.nome_produto || '-'}</TableCell>
+                                        <TableCell className="hidden sm:table-cell">{lote.nome_empresa || '-'}</TableCell>
                                         <TableCell className="hidden md:table-cell">{new Date(lote.createdAt).toLocaleDateString()}</TableCell>
                                         <TableCell>
                                             <Badge variant={lote.email_enviado ? "default" : "secondary"}>
