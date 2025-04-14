@@ -6,7 +6,7 @@ async function main() {
     console.log('Iniciando o seeding');
 
     const username = 'admin';
-    const plainPassword = 'senha123'; // Lembre-se de usar uma senha forte no seu ambiente real
+    const plainPassword = 'URpoLadI'; // Lembre-se de usar uma senha forte no seu ambiente real
     const name = 'Admin';
 
     const saltRound = 10; // Nota: no exemplo anterior usei 'saltRounds', mas 'saltRound' funciona igual

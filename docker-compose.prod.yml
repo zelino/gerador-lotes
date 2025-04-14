@@ -1,0 +1,47 @@
+# docker-compose.prod.yml - Configuração para Produção
+services:
+  # --- Serviço da Aplicação Next.js ---
+  app:
+    container_name: gerador_lotes_app_prod # Nome do container para fácil identificação
+    build:
+      context: .         # Usa o diretório atual como contexto para o build
+      dockerfile: Dockerfile # Especifica qual Dockerfile usar (o que criamos para produção)
+    restart: unless-stopped # Reinicia o container automaticamente se ele parar, a menos que parado manualmente
+    env_file:
+      - .env.prod     # Carrega variáveis de ambiente DESTE arquivo (que estará NO SERVIDOR)
+    ports:
+      # Mapeia a porta 3000 do HOST para a porta 3000 do CONTAINER (onde o Next.js roda)
+      # Se você usar um proxy reverso (Nginx), talvez não precise mapear diretamente aqui.
+      - "3000:3000"
+    networks:
+      - app_network   # Conecta este serviço à rede customizada definida abaixo
+    depends_on:
+      - db            # Garante que o serviço 'db' seja iniciado antes do 'app'
+
+  # --- Serviço do Banco de Dados PostgreSQL ---
+  db:
+    container_name: gerador_lotes_db_prod # Nome do container
+    image: postgres:16 # Recomenda-se usar uma versão específica (ex: 15 ou 16), não 'latest'
+    restart: unless-stopped
+    env_file:
+      - .env.prod     # Carrega as variáveis POSTGRES_* deste arquivo (NO SERVIDOR)
+    volumes:
+      # IMPORTANTE: Persiste os dados do banco usando um volume nomeado.
+      # Os dados sobreviverão mesmo se o container for removido/recriado.
+      - postgres_prod_data:/var/lib/postgresql/data
+    networks:
+      - app_network   # Conecta também à rede customizada
+    # !!!! NÃO EXPONHA A PORTA DO BANCO DIRETAMENTE EM PRODUÇÃO !!!!
+    # A aplicação 'app' se conectará ao serviço 'db' pela rede interna 'app_network'
+    # na porta padrão 5432 (definido na DATABASE_URL do .env.prod como host 'db').
+    # Remova a seção 'ports' que você tinha no docker-compose.yml de desenvolvimento.
+
+# --- Definição da Rede Customizada ---
+networks:
+  app_network:
+    driver: bridge # Cria uma rede isolada para os containers se comunicarem
+
+# --- Definição do Volume Nomeado ---
+volumes:
+  postgres_prod_data:
+    driver: local # Define o volume para persistir os dados do PostgreSQL
