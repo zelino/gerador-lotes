@@ -1,4 +1,4 @@
-import { prisma } from '../src/lib/prisma'; // Certifique-se que este caminho está correto se você mudou o 'output' no schema.prisma
+import { prisma } from '../src/lib/prisma'; // Importa o cliente Prisma do projeto
 import bcrypt from 'bcryptjs';
 
 

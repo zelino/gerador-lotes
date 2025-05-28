@@ -132,6 +132,7 @@ exports.Prisma.LoteScalarFieldEnum = {
   nome_produto: 'nome_produto',
   nome_empresa: 'nome_empresa',
   referencia: 'referencia',
+  quantidade: 'quantidade',
   numero_lote: 'numero_lote',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',

@@ -9,18 +9,22 @@ import { z } from 'zod'; // Biblioteca para validação de dados (opcional mas r
 const createLoteSchema = z.object({
     numero_fatura: z.string().optional().nullable(), // Permite string, null ou undefined
     nome_produto: z.string().optional().nullable(),
+    quantidade: z.number().int().optional().default(0).nullable(),
     nome_empresa: z.string().optional().nullable(),
     referencia: z.string().optional().nullable(),
+    prefixo_lote: z.string().max(4).regex(/^[A-Za-z]{1,4}$/, {
+        message: "O prefixo deve conter apenas letras (máximo 4)"
+    }),
     // Não incluímos numero_lote, data_geracao, userId, email_enviado - serão gerados/obtidos no backend
 });
 
 // --- Função para gerar o número do lote ---
-// Exemplo: MP-XXXXX/YYYY (XXXXX = 5 números aleatórios, YYYY = ano atual)
-function gerarNumeroLote(): string {
+// Exemplo: XXXX-XXXXX/YYYY (XXXX = prefixo personalizado, XXXXX = 5 números aleatórios, YYYY = ano atual)
+function gerarNumeroLote(prefixo: string): string {
     const ano = new Date().getFullYear();
     // Gera 5 números aleatórios (00000 a 99999) e formata com padding
     const sequencia = Math.floor(Math.random() * 100000).toString().padStart(5, '0');
-    return `MP-${sequencia}/${ano}`;
+    return `${prefixo}-${sequencia}/${ano}`;
 }
 
 // --- Handler para GET /api/lotes ---
@@ -81,12 +85,12 @@ export async function POST(request: Request) {
         }
 
         // Pegar os dados validados
-        const { numero_fatura, nome_produto, nome_empresa, referencia } = validation.data;
+        const { numero_fatura, nome_produto, quantidade, nome_empresa, referencia, prefixo_lote } = validation.data;
 
-        // Gerar o número do lote único
+        // Gerar o número do lote único com o prefixo fornecido
         // TODO: Adicionar lógica para garantir unicidade se houver chance de colisão (raro com 5 dígitos aleatórios)
         //       Uma abordagem seria tentar gerar e salvar, e se der erro de unicidade, tentar gerar outro.
-        const numeroLote = gerarNumeroLote();
+        const numeroLote = gerarNumeroLote(prefixo_lote);
         console.log(`POST /api/lotes: Numero de lote gerado: ${numeroLote}`);
 
         // Criar o lote no banco de dados
@@ -94,6 +98,7 @@ export async function POST(request: Request) {
             data: {
                 numero_fatura: numero_fatura,
                 nome_produto: nome_produto,
+                quantidade: quantidade, 
                 nome_empresa: nome_empresa,
                 referencia: referencia,
                 numero_lote: numeroLote, // Número gerado

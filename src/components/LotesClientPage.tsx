@@ -2,7 +2,8 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { z } from 'zod';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { set, z } from 'zod';
 import { ReloadIcon } from "@radix-ui/react-icons"; // Ícone de loading
 
 // Importando componentes shadcn/ui
@@ -34,6 +35,7 @@ const LoteSchemaFrontend = z.object({
     id: z.string(),
     numero_fatura: z.string().nullable(),
     nome_produto: z.string().nullable(),
+    quantidade: z.number().int().default(1).nullable(),
     nome_empresa: z.string().nullable(),
     referencia: z.string().nullable(),
     numero_lote: z.string(),
@@ -41,6 +43,7 @@ const LoteSchemaFrontend = z.object({
     updatedAt: z.string(),
     email_enviado: z.boolean().nullable().default(false),
     userId: z.string(),
+    // Não precisamos incluir prefixo_lote no schema frontend pois ele não é retornado pela API
 });
 type Lote = z.infer<typeof LoteSchemaFrontend>;
 
@@ -50,7 +53,8 @@ export default function LotesClientPage() {
     const [numeroFatura, setNumeroFatura] = useState('');
     const [nomeProduto, setNomeProduto] = useState('');
     const [nomeEmpresa, setNomeEmpresa] = useState('');
-    const [referencia, setReferencia] = useState('');
+    const [quantidade, setQuantidade] = useState('');
+    const [prefixoLote, setPrefixoLote] = useState('');
 
     // --- Estados da Aplicação ---
     const [lotes, setLotes] = useState<Lote[]>([]);
@@ -104,10 +108,12 @@ export default function LotesClientPage() {
         setIsSubmitting(true);
 
         const loteData = {
-            numero_fatura: numeroFatura || null,
-            nome_produto: nomeProduto || null,
-            nome_empresa: nomeEmpresa || null,
-            referencia: referencia || null,
+            numero_fatura: numeroFatura.trim() || null,
+            nome_produto: nomeProduto.trim() || null,
+            nome_empresa: nomeEmpresa.trim() || null,
+            referencia: null, // Mantemos o campo no backend, mas enviamos como null
+            quantidade: quantidade ? parseInt(quantidade, 10) : 0,
+            prefixo_lote: prefixoLote.trim()
         };
 
         console.log('Enviando dados para criar lote:', loteData);
@@ -139,7 +145,8 @@ export default function LotesClientPage() {
             setNumeroFatura('');
             setNomeProduto('');
             setNomeEmpresa('');
-            setReferencia('');
+            setQuantidade(''); // Limpa também o campo de quantidade
+            setPrefixoLote(''); // Reseta para valor vazio
 
         } catch (err: unknown) {
             console.error('Falha ao criar lote:', err);
@@ -221,12 +228,37 @@ export default function LotesClientPage() {
                                 <Input id="nome_produto" value={nomeProduto} onChange={e => setNomeProduto(e.target.value)} placeholder="Ex: Componente X" disabled={isSubmitting} required />
                             </div>
                             <div className="space-y-1">
+                                <Label htmlFor="quantidade">Quantidade</Label>
+                                <Input 
+                                    id="quantidade" 
+                                    type="number"
+                                    min="0" 
+                                    value={quantidade} 
+                                    onChange={e => setQuantidade(e.target.value)} 
+                                    placeholder="Ex: 100" 
+                                    disabled={isSubmitting} 
+                                    required 
+                                />
+                            </div>
+                            <div className="space-y-1">
                                 <Label htmlFor="nome_empresa">Nome Empresa</Label>
                                 <Input id="nome_empresa" value={nomeEmpresa} onChange={e => setNomeEmpresa(e.target.value)} placeholder="Ex: Indústria ABC" disabled={isSubmitting} required />
                             </div>
                             <div className="space-y-1">
-                                <Label htmlFor="referencia">Referência</Label>
-                                <Input id="referencia" value={referencia} onChange={e => setReferencia(e.target.value)} placeholder="Ex: REF-001" disabled={isSubmitting} required />
+                                <Label htmlFor="prefixo_lote">Prefixo do Lote (4 letras)</Label>
+                                <Input 
+                                    id="prefixo_lote" 
+                                    value={prefixoLote} 
+                                    onChange={e => {
+                                        // Filtra apenas letras, limita a 4 caracteres e converte para maiúsculas
+                                        const value = e.target.value.replace(/[^A-Za-z]/g, '').toUpperCase().slice(0, 4);
+                                        setPrefixoLote(value);
+                                    }} 
+                                    placeholder="Ex: ABCD" 
+                                    maxLength={4}
+                                    disabled={isSubmitting} 
+                                    required 
+                                />
                             </div>
                         </div>
                     </CardContent>
@@ -270,6 +302,7 @@ export default function LotesClientPage() {
                                     <TableHead>Número Lote</TableHead>
                                     <TableHead>Referência</TableHead>
                                     <TableHead className="hidden sm:table-cell">Produto</TableHead>
+                                    <TableHead className="hidden sm:table-cell">Quantidade</TableHead>
                                     <TableHead className="hidden sm:table-cell">Empresa</TableHead>
                                     <TableHead className="hidden md:table-cell">Data Criação</TableHead>
                                     <TableHead>Status Email</TableHead>
@@ -282,6 +315,7 @@ export default function LotesClientPage() {
                                         <TableCell className="font-medium">{lote.numero_lote}</TableCell>
                                         <TableCell>{lote.referencia || '-'}</TableCell>
                                         <TableCell className="hidden sm:table-cell">{lote.nome_produto || '-'}</TableCell>
+                                        <TableCell className="hidden sm:table-cell">{lote.quantidade || '-'}</TableCell>
                                         <TableCell className="hidden sm:table-cell">{lote.nome_empresa || '-'}</TableCell>
                                         <TableCell className="hidden md:table-cell">{new Date(lote.createdAt).toLocaleDateString()}</TableCell>
                                         <TableCell>

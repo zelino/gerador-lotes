@@ -2079,8 +2079,18 @@ export namespace Prisma {
 
   export type AggregateLote = {
     _count: LoteCountAggregateOutputType | null
+    _avg: LoteAvgAggregateOutputType | null
+    _sum: LoteSumAggregateOutputType | null
     _min: LoteMinAggregateOutputType | null
     _max: LoteMaxAggregateOutputType | null
+  }
+
+  export type LoteAvgAggregateOutputType = {
+    quantidade: number | null
+  }
+
+  export type LoteSumAggregateOutputType = {
+    quantidade: number | null
   }
 
   export type LoteMinAggregateOutputType = {
@@ -2089,6 +2099,7 @@ export namespace Prisma {
     nome_produto: string | null
     nome_empresa: string | null
     referencia: string | null
+    quantidade: number | null
     numero_lote: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -2102,6 +2113,7 @@ export namespace Prisma {
     nome_produto: string | null
     nome_empresa: string | null
     referencia: string | null
+    quantidade: number | null
     numero_lote: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -2115,6 +2127,7 @@ export namespace Prisma {
     nome_produto: number
     nome_empresa: number
     referencia: number
+    quantidade: number
     numero_lote: number
     createdAt: number
     updatedAt: number
@@ -2124,12 +2137,21 @@ export namespace Prisma {
   }
 
 
+  export type LoteAvgAggregateInputType = {
+    quantidade?: true
+  }
+
+  export type LoteSumAggregateInputType = {
+    quantidade?: true
+  }
+
   export type LoteMinAggregateInputType = {
     id?: true
     numero_fatura?: true
     nome_produto?: true
     nome_empresa?: true
     referencia?: true
+    quantidade?: true
     numero_lote?: true
     createdAt?: true
     updatedAt?: true
@@ -2143,6 +2165,7 @@ export namespace Prisma {
     nome_produto?: true
     nome_empresa?: true
     referencia?: true
+    quantidade?: true
     numero_lote?: true
     createdAt?: true
     updatedAt?: true
@@ -2156,6 +2179,7 @@ export namespace Prisma {
     nome_produto?: true
     nome_empresa?: true
     referencia?: true
+    quantidade?: true
     numero_lote?: true
     createdAt?: true
     updatedAt?: true
@@ -2202,6 +2226,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: LoteAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: LoteSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: LoteMinAggregateInputType
@@ -2232,6 +2268,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: LoteCountAggregateInputType | true
+    _avg?: LoteAvgAggregateInputType
+    _sum?: LoteSumAggregateInputType
     _min?: LoteMinAggregateInputType
     _max?: LoteMaxAggregateInputType
   }
@@ -2242,12 +2280,15 @@ export namespace Prisma {
     nome_produto: string | null
     nome_empresa: string | null
     referencia: string | null
+    quantidade: number | null
     numero_lote: string | null
     createdAt: Date
     updatedAt: Date
     email_enviado: boolean | null
     userId: string
     _count: LoteCountAggregateOutputType | null
+    _avg: LoteAvgAggregateOutputType | null
+    _sum: LoteSumAggregateOutputType | null
     _min: LoteMinAggregateOutputType | null
     _max: LoteMaxAggregateOutputType | null
   }
@@ -2272,6 +2313,7 @@ export namespace Prisma {
     nome_produto?: boolean
     nome_empresa?: boolean
     referencia?: boolean
+    quantidade?: boolean
     numero_lote?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -2286,6 +2328,7 @@ export namespace Prisma {
     nome_produto?: boolean
     nome_empresa?: boolean
     referencia?: boolean
+    quantidade?: boolean
     numero_lote?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -2300,6 +2343,7 @@ export namespace Prisma {
     nome_produto?: boolean
     nome_empresa?: boolean
     referencia?: boolean
+    quantidade?: boolean
     numero_lote?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -2314,6 +2358,7 @@ export namespace Prisma {
     nome_produto?: boolean
     nome_empresa?: boolean
     referencia?: boolean
+    quantidade?: boolean
     numero_lote?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -2321,7 +2366,7 @@ export namespace Prisma {
     userId?: boolean
   }
 
-  export type LoteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "numero_fatura" | "nome_produto" | "nome_empresa" | "referencia" | "numero_lote" | "createdAt" | "updatedAt" | "email_enviado" | "userId", ExtArgs["result"]["lote"]>
+  export type LoteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "numero_fatura" | "nome_produto" | "nome_empresa" | "referencia" | "quantidade" | "numero_lote" | "createdAt" | "updatedAt" | "email_enviado" | "userId", ExtArgs["result"]["lote"]>
   export type LoteInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -2343,6 +2388,7 @@ export namespace Prisma {
       nome_produto: string | null
       nome_empresa: string | null
       referencia: string | null
+      quantidade: number | null
       numero_lote: string | null
       createdAt: Date
       updatedAt: Date
@@ -2777,6 +2823,7 @@ export namespace Prisma {
     readonly nome_produto: FieldRef<"Lote", 'String'>
     readonly nome_empresa: FieldRef<"Lote", 'String'>
     readonly referencia: FieldRef<"Lote", 'String'>
+    readonly quantidade: FieldRef<"Lote", 'Int'>
     readonly numero_lote: FieldRef<"Lote", 'String'>
     readonly createdAt: FieldRef<"Lote", 'DateTime'>
     readonly updatedAt: FieldRef<"Lote", 'DateTime'>
@@ -3228,6 +3275,7 @@ export namespace Prisma {
     nome_produto: 'nome_produto',
     nome_empresa: 'nome_empresa',
     referencia: 'referencia',
+    quantidade: 'quantidade',
     numero_lote: 'numero_lote',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
@@ -3296,13 +3344,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Boolean'
-   */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
-
-
-  /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -3313,6 +3354,27 @@ export namespace Prisma {
    * Reference to a field of type 'Int[]'
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float'
+   */
+  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float[]'
+   */
+  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
   /**
    * Deep Input Types
@@ -3388,6 +3450,7 @@ export namespace Prisma {
     nome_produto?: StringNullableFilter<"Lote"> | string | null
     nome_empresa?: StringNullableFilter<"Lote"> | string | null
     referencia?: StringNullableFilter<"Lote"> | string | null
+    quantidade?: IntNullableFilter<"Lote"> | number | null
     numero_lote?: StringNullableFilter<"Lote"> | string | null
     createdAt?: DateTimeFilter<"Lote"> | Date | string
     updatedAt?: DateTimeFilter<"Lote"> | Date | string
@@ -3402,6 +3465,7 @@ export namespace Prisma {
     nome_produto?: SortOrderInput | SortOrder
     nome_empresa?: SortOrderInput | SortOrder
     referencia?: SortOrderInput | SortOrder
+    quantidade?: SortOrderInput | SortOrder
     numero_lote?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -3420,6 +3484,7 @@ export namespace Prisma {
     nome_produto?: StringNullableFilter<"Lote"> | string | null
     nome_empresa?: StringNullableFilter<"Lote"> | string | null
     referencia?: StringNullableFilter<"Lote"> | string | null
+    quantidade?: IntNullableFilter<"Lote"> | number | null
     createdAt?: DateTimeFilter<"Lote"> | Date | string
     updatedAt?: DateTimeFilter<"Lote"> | Date | string
     email_enviado?: BoolNullableFilter<"Lote"> | boolean | null
@@ -3433,14 +3498,17 @@ export namespace Prisma {
     nome_produto?: SortOrderInput | SortOrder
     nome_empresa?: SortOrderInput | SortOrder
     referencia?: SortOrderInput | SortOrder
+    quantidade?: SortOrderInput | SortOrder
     numero_lote?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     email_enviado?: SortOrderInput | SortOrder
     userId?: SortOrder
     _count?: LoteCountOrderByAggregateInput
+    _avg?: LoteAvgOrderByAggregateInput
     _max?: LoteMaxOrderByAggregateInput
     _min?: LoteMinOrderByAggregateInput
+    _sum?: LoteSumOrderByAggregateInput
   }
 
   export type LoteScalarWhereWithAggregatesInput = {
@@ -3452,6 +3520,7 @@ export namespace Prisma {
     nome_produto?: StringNullableWithAggregatesFilter<"Lote"> | string | null
     nome_empresa?: StringNullableWithAggregatesFilter<"Lote"> | string | null
     referencia?: StringNullableWithAggregatesFilter<"Lote"> | string | null
+    quantidade?: IntNullableWithAggregatesFilter<"Lote"> | number | null
     numero_lote?: StringNullableWithAggregatesFilter<"Lote"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Lote"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Lote"> | Date | string
@@ -3532,6 +3601,7 @@ export namespace Prisma {
     nome_produto?: string | null
     nome_empresa?: string | null
     referencia?: string | null
+    quantidade?: number | null
     numero_lote?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -3545,6 +3615,7 @@ export namespace Prisma {
     nome_produto?: string | null
     nome_empresa?: string | null
     referencia?: string | null
+    quantidade?: number | null
     numero_lote?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -3558,6 +3629,7 @@ export namespace Prisma {
     nome_produto?: NullableStringFieldUpdateOperationsInput | string | null
     nome_empresa?: NullableStringFieldUpdateOperationsInput | string | null
     referencia?: NullableStringFieldUpdateOperationsInput | string | null
+    quantidade?: NullableIntFieldUpdateOperationsInput | number | null
     numero_lote?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -3571,6 +3643,7 @@ export namespace Prisma {
     nome_produto?: NullableStringFieldUpdateOperationsInput | string | null
     nome_empresa?: NullableStringFieldUpdateOperationsInput | string | null
     referencia?: NullableStringFieldUpdateOperationsInput | string | null
+    quantidade?: NullableIntFieldUpdateOperationsInput | number | null
     numero_lote?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -3584,6 +3657,7 @@ export namespace Prisma {
     nome_produto?: string | null
     nome_empresa?: string | null
     referencia?: string | null
+    quantidade?: number | null
     numero_lote?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -3597,6 +3671,7 @@ export namespace Prisma {
     nome_produto?: NullableStringFieldUpdateOperationsInput | string | null
     nome_empresa?: NullableStringFieldUpdateOperationsInput | string | null
     referencia?: NullableStringFieldUpdateOperationsInput | string | null
+    quantidade?: NullableIntFieldUpdateOperationsInput | number | null
     numero_lote?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -3609,6 +3684,7 @@ export namespace Prisma {
     nome_produto?: NullableStringFieldUpdateOperationsInput | string | null
     nome_empresa?: NullableStringFieldUpdateOperationsInput | string | null
     referencia?: NullableStringFieldUpdateOperationsInput | string | null
+    quantidade?: NullableIntFieldUpdateOperationsInput | number | null
     numero_lote?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -3749,6 +3825,17 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type BoolNullableFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
     not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
@@ -3765,11 +3852,16 @@ export namespace Prisma {
     nome_produto?: SortOrder
     nome_empresa?: SortOrder
     referencia?: SortOrder
+    quantidade?: SortOrder
     numero_lote?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     email_enviado?: SortOrder
     userId?: SortOrder
+  }
+
+  export type LoteAvgOrderByAggregateInput = {
+    quantidade?: SortOrder
   }
 
   export type LoteMaxOrderByAggregateInput = {
@@ -3778,6 +3870,7 @@ export namespace Prisma {
     nome_produto?: SortOrder
     nome_empresa?: SortOrder
     referencia?: SortOrder
+    quantidade?: SortOrder
     numero_lote?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -3791,11 +3884,32 @@ export namespace Prisma {
     nome_produto?: SortOrder
     nome_empresa?: SortOrder
     referencia?: SortOrder
+    quantidade?: SortOrder
     numero_lote?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     email_enviado?: SortOrder
     userId?: SortOrder
+  }
+
+  export type LoteSumOrderByAggregateInput = {
+    quantidade?: SortOrder
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type BoolNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -3864,6 +3978,14 @@ export namespace Prisma {
     create?: XOR<UserCreateWithoutLotesInput, UserUncheckedCreateWithoutLotesInput>
     connectOrCreate?: UserCreateOrConnectWithoutLotesInput
     connect?: UserWhereUniqueInput
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type NullableBoolFieldUpdateOperationsInput = {
@@ -3992,6 +4114,33 @@ export namespace Prisma {
     not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
   }
 
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedBoolNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
     not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
@@ -4006,6 +4155,7 @@ export namespace Prisma {
     nome_produto?: string | null
     nome_empresa?: string | null
     referencia?: string | null
+    quantidade?: number | null
     numero_lote?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -4018,6 +4168,7 @@ export namespace Prisma {
     nome_produto?: string | null
     nome_empresa?: string | null
     referencia?: string | null
+    quantidade?: number | null
     numero_lote?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -4059,6 +4210,7 @@ export namespace Prisma {
     nome_produto?: StringNullableFilter<"Lote"> | string | null
     nome_empresa?: StringNullableFilter<"Lote"> | string | null
     referencia?: StringNullableFilter<"Lote"> | string | null
+    quantidade?: IntNullableFilter<"Lote"> | number | null
     numero_lote?: StringNullableFilter<"Lote"> | string | null
     createdAt?: DateTimeFilter<"Lote"> | Date | string
     updatedAt?: DateTimeFilter<"Lote"> | Date | string
@@ -4124,6 +4276,7 @@ export namespace Prisma {
     nome_produto?: string | null
     nome_empresa?: string | null
     referencia?: string | null
+    quantidade?: number | null
     numero_lote?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -4136,6 +4289,7 @@ export namespace Prisma {
     nome_produto?: NullableStringFieldUpdateOperationsInput | string | null
     nome_empresa?: NullableStringFieldUpdateOperationsInput | string | null
     referencia?: NullableStringFieldUpdateOperationsInput | string | null
+    quantidade?: NullableIntFieldUpdateOperationsInput | number | null
     numero_lote?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -4148,6 +4302,7 @@ export namespace Prisma {
     nome_produto?: NullableStringFieldUpdateOperationsInput | string | null
     nome_empresa?: NullableStringFieldUpdateOperationsInput | string | null
     referencia?: NullableStringFieldUpdateOperationsInput | string | null
+    quantidade?: NullableIntFieldUpdateOperationsInput | number | null
     numero_lote?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -4160,6 +4315,7 @@ export namespace Prisma {
     nome_produto?: NullableStringFieldUpdateOperationsInput | string | null
     nome_empresa?: NullableStringFieldUpdateOperationsInput | string | null
     referencia?: NullableStringFieldUpdateOperationsInput | string | null
+    quantidade?: NullableIntFieldUpdateOperationsInput | number | null
     numero_lote?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

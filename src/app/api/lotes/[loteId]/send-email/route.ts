@@ -7,9 +7,9 @@ import prisma from '@/lib/prisma'; // Seu Prisma Client
 import nodemailer from 'nodemailer'; // Importa o nodemailer
 
 // Helper para verificar se o erro é do Prisma
-function isPrismaError(e: unknown): e is { code: string; meta?: any } {
-    return typeof e === 'object' && e !== null && 'code' in e;
-}
+// function isPrismaError(e: unknown): e is { code: string; meta?: any } {
+//     return typeof e === 'object' && e !== null && 'code' in e;
+// }
 
 // --- Handler POST ---
 export async function POST(
