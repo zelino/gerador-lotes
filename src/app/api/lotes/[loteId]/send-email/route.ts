@@ -13,10 +13,14 @@ import nodemailer from 'nodemailer'; // Importa o nodemailer
 
 // --- Handler POST ---
 export async function POST(
-    _request: Request, // Request não é usado, prefixado com _
-    { params }: { params: { loteId: string } } // Obtém o ID do lote da URL
+    request: Request,
 ) {
-    const loteId = params.loteId;
+    // Extrair loteId dos segmentos da URL
+    const url = new URL(request.url);
+    const pathSegments = url.pathname.split('/');
+    const loteIdIndex = pathSegments.findIndex(segment => segment === 'lotes') + 1;
+    const loteId = pathSegments[loteIdIndex];
+    
     console.log(`[API Send Email] Recebida requisição para lote ID: ${loteId}`);
 
     // 1. Verificar Autenticação

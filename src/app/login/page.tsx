@@ -1,67 +1,68 @@
 // app/login/page.tsx
 'use client'; // ESSENCIAL: Marca este como um Client Component
 
-import { useState } from 'react';
-import { signIn } from 'next-auth/react'; // Função para iniciar o processo de login
-import { useRouter, useSearchParams } from 'next/navigation'; // Para redirecionamento e leitura de erros da URL
+import { Suspense } from 'react';
 
-export default function LoginPage() {
+// Componente que encapsula o formulário de login
+function LoginFormWrapper() {
+  return (
+    <Suspense fallback={<div>Carregando...</div>}>
+      <LoginFormContent />
+    </Suspense>
+  );
+}
+
+// Componente que usa useSearchParams (precisa estar dentro de Suspense)
+import { useState } from 'react';
+import { signIn } from 'next-auth/react';
+import { useRouter, useSearchParams } from 'next/navigation';
+
+function LoginFormContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState<string | null>(null); // Para exibir mensagens de erro
-    const [isLoading, setIsLoading] = useState(false); // Para feedback visual durante o login
+    const [error, setError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
-    // Tenta pegar a mensagem de erro da URL (se o NextAuth redirecionou com erro)
+    // Tenta pegar a mensagem de erro da URL
     const callbackError = searchParams.get('error');
     // Mapeia erros comuns do NextAuth para mensagens amigáveis
     const errorMessage = error || (callbackError === 'CredentialsSignin'
         ? 'Usuário ou senha inválidos.'
         : callbackError ? 'Ocorreu um erro ao tentar fazer login.' : null);
 
-
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault(); // Impede o recarregamento da página padrão do form
-        setError(null); // Limpa erros anteriores
-        setIsLoading(true); // Ativa o estado de carregamento
+        event.preventDefault();
+        setError(null);
+        setIsLoading(true);
 
         try {
-            // Chama a função signIn do NextAuth
             const result = await signIn('credentials', {
-                // Indica o provider que configuramos (o 'id'/'name' no route.ts)
-                redirect: false, // IMPORTANTE: Não redireciona automaticamente, vamos tratar o resultado
-                username: username, // Passa o username do estado
-                password: password, // Passa a senha do estado
-                // callbackUrl: '/' // Opcional: para onde redirecionar após sucesso (se redirect=true)
-                // Se redirect=false, o router.push() abaixo cuidará disso.
+                redirect: false,
+                username: username,
+                password: password,
             });
 
-            setIsLoading(false); // Desativa o carregamento após a resposta
+            setIsLoading(false);
 
-            if (result?.error && !result.error) {
-                // Se o NextAuth retornou um erro (ex: credenciais inválidas via 'authorize')
+            if (result?.error) {
                 console.error('Erro de login retornado pelo signIn:', result.error);
                 if (result.error === 'CredentialsSignin') {
                     setError('Usuário ou senha inválidos.');
                 } else {
                     setError(`Erro ao fazer login: ${result.error}`);
                 }
-            } else if (result?.ok && !result.error) {
-                // Login bem-sucedido!
+            } else if (result?.ok) {
                 console.log('Login bem-sucedido, redirecionando...');
-                // Redireciona para a página principal (ou para onde o usuário tentou ir antes)
-                // O ideal é redirecionar para a 'callbackUrl' se ela existir, ou para a raiz '/'
                 const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
-                router.push(callbackUrl); // Usa o router do Next.js para navegar
-                // router.refresh(); // Opcional: Força atualização dos dados do servidor se necessário na próxima página
+                router.push(callbackUrl);
             } else {
-                // Caso inesperado
                 setError('Ocorreu uma resposta inesperada durante o login.');
                 console.warn('Resposta inesperada do signIn:', result);
             }
         } catch (err) {
-            setIsLoading(false); // Garante que desativa o loading em caso de erro na chamada
+            setIsLoading(false);
             console.error('Erro inesperado ao chamar signIn:', err);
             setError('Ocorreu um erro inesperado. Tente novamente.');
         }
@@ -81,7 +82,6 @@ export default function LoginPage() {
                     </div>
                 )}
 
-
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
                         <label
@@ -95,9 +95,9 @@ export default function LoginPage() {
                             id="username"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
-                            required // Campo obrigatório
+                            required
                             className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
-                            disabled={isLoading} // Desabilita durante o carregamento
+                            disabled={isLoading}
                         />
                     </div>
                     <div className="mb-6">
@@ -112,17 +112,16 @@ export default function LoginPage() {
                             id="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            required // Campo obrigatório
+                            required
                             className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
-                            disabled={isLoading} // Desabilita durante o carregamento
+                            disabled={isLoading}
                         />
                     </div>
                     <div className="flex items-center justify-between">
                         <button
                             type="submit"
-                            className={`focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none ${isLoading ? 'cursor-not-allowed opacity-50' : '' // Estilo de loading
-                                }`}
-                            disabled={isLoading} // Desabilita durante o carregamento
+                            className={`focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none ${isLoading ? 'cursor-not-allowed opacity-50' : ''}`}
+                            disabled={isLoading}
                         >
                             {isLoading ? 'Entrando...' : 'Entrar'}
                         </button>
@@ -132,3 +131,6 @@ export default function LoginPage() {
         </div>
     );
 }
+
+// Exportamos o componente que será renderizado
+export default LoginFormWrapper;

@@ -1,0 +1,11 @@
+# Node modules
+node_modules/
+
+# Next.js build output
+.next/
+
+# Prisma generated files
+src/generated/
+src/generated/prisma/
+**/generated/**
+prisma/client/
